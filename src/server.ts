@@ -3,16 +3,18 @@ import { env } from './config/env.js'
 import { connectDatabase } from './config/database.js'
 
 async function main() {
-  await connectDatabase()
+  try {
+    await connectDatabase()
 
-  const app = createApp()
-  app.listen(env.PORT, () => {
-    console.log(`EduBridge API listening on http://localhost:${env.PORT}`)
-    console.log(`Health: http://localhost:${env.PORT}/health`)
-  })
+    const app = createApp()
+
+    app.listen(env.PORT, '0.0.0.0', () => {
+      console.log(`EduBridge API running on port ${env.PORT}`)
+    })
+  } catch (error) {
+    console.error('Failed to start EduBridge API:', error)
+    process.exit(1)
+  }
 }
 
-main().catch((err) => {
-  console.error('Failed to start server:', err)
-  process.exit(1)
-})
+main()
